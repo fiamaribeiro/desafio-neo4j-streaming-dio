@@ -1,35 +1,41 @@
 # Desafio DIO - Modelagem de Banco de Dados em Grafos com Neo4j
 
 ## Descrição do Projeto
-Este projeto foi desenvolvido como parte do desafio prático da DIO utilizando Neo4j para modelagem de banco de dados em grafos.
+Este projeto foi desenvolvido como parte de um desafio prático da DIO com foco em modelagem de banco de dados em grafos utilizando **Neo4j**.
 
-O objetivo foi construir um grafo para representar um serviço de streaming, relacionando usuários, filmes, séries, gêneros, atores e diretores, além de registrar os conteúdos assistidos e as avaliações dadas pelos usuários.
+A proposta consistiu em construir um grafo para representar o contexto de uma **plataforma de streaming**, conectando usuários, filmes, séries, gêneros, atores e diretores. Além da modelagem, o projeto também contempla a criação dos relacionamentos entre essas entidades, o registro de conteúdos assistidos e a execução de consultas de negócio com **Cypher**.
+
+O objetivo foi aplicar, na prática, os principais conceitos de bancos de dados em grafos, desde a definição do modelo até a documentação de um repositório técnico com estrutura de portfólio.
+
+---
 
 ## Contexto do Problema
-Plataformas de streaming possuem muitos relacionamentos entre entidades, como:
-- usuários assistindo conteúdos
-- filmes e séries pertencendo a gêneros
-- atores participando de conteúdos
-- diretores dirigindo filmes e séries
+Plataformas de streaming possuem uma estrutura fortemente baseada em relacionamentos. Nesse tipo de cenário, não basta armazenar dados isolados: é essencial representar como as entidades se conectam.
 
-Esse tipo de cenário é muito bem representado por bancos de dados em grafos, pois as conexões entre os dados são parte central do problema.
+Neste projeto, foram considerados elementos como:
+- usuários que assistem filmes e séries;
+- conteúdos classificados por gênero;
+- atores que participam de obras;
+- diretores responsáveis por filmes e séries;
+- avaliações atribuídas pelos usuários aos conteúdos assistidos.
+
+Esse contexto torna o uso de grafos especialmente adequado, pois as conexões entre os dados são parte central do problema.
+
+---
 
 ## Justificativa do Uso de Grafos
-A escolha do Neo4j foi feita porque o modelo em grafos permite representar de forma intuitiva as conexões entre usuários e conteúdos.
+A escolha do **Neo4j** foi motivada pela necessidade de representar relações de forma intuitiva, visual e eficiente.
 
-Em vez de focar apenas em tabelas e junções, o banco em grafo permite visualizar e consultar diretamente as relações entre:
-- User
-- Movie
-- Series
-- Genre
-- Actor
-- Director
+Em um banco relacional tradicional, esse tipo de problema exigiria várias tabelas intermediárias e múltiplas junções. Já em um banco de dados em grafo, as relações são tratadas como elementos de primeira classe, o que facilita tanto a modelagem quanto a consulta.
 
-Isso facilita análises como:
-- quais conteúdos um usuário assistiu
-- quais filmes pertencem a um gênero
-- quais atores participaram de determinado conteúdo
-- quais diretores possuem mais conteúdos cadastrados
+Com isso, o projeto permite responder de forma natural a perguntas como:
+- Quais conteúdos um usuário assistiu?
+- Quais filmes pertencem ao gênero Ficção Científica?
+- Quais atores participaram de determinado conteúdo?
+- Quais diretores possuem mais conteúdos cadastrados?
+- Qual a média de avaliação dos conteúdos?
+
+---
 
 ## Modelo do Grafo
 
@@ -51,17 +57,30 @@ Isso facilita análises como:
 - `(Movie)-[:IN_GENRE]->(Genre)`
 - `(Series)-[:IN_GENRE]->(Genre)`
 
-### Imagem do modelo
+### Representação visual do modelo
 ![Graph Model](images/graph-model.png)
 
+---
+
 ## Estrutura do Repositório
-- `dataset/`: arquivos CSV utilizados como base de dados
-- `scripts/`: scripts Cypher de criação e consulta
-- `images/`: imagens do modelo e prints das consultas
-- `README.md`: documentação principal do projeto
+```bash
+desafio-neo4j-streaming-dio/
+├── README.md
+├── dataset/
+├── scripts/
+└── images/
+```
+---
+
+## Organização das pastas
+
+- ` dataset/:` arquivos CSV com a estrutura de dados utilizada como base do projeto;
+- ` scripts/:` scripts Cypher para criação de constraints, carga de nós, relacionamentos e consultas;
+- ` images/:` imagens do modelo e evidências visuais das consultas realizadas;
+- ` README.md:` documentação principal do projeto.
 
 ## Dataset
-O projeto utiliza arquivos CSV contendo:
+O repositório contém arquivos CSV representando os dados do cenário de streaming, incluindo:
 - usuários
 - filmes
 - séries
@@ -70,20 +89,43 @@ O projeto utiliza arquivos CSV contendo:
 - diretores
 - relacionamentos entre os dados
 
-Esses arquivos foram organizados para representar um pequeno cenário de streaming com dados suficientes para demonstrar a modelagem e as consultas de negócio.
+Os arquivos CSV foram mantidos no projeto como dataset de apoio e documentação da estrutura de dados. Para a execução no Neo4j Aura, a carga foi adaptada para scripts Cypher, garantindo compatibilidade com o ambiente utilizado.
 
 ## Scripts
 ### `01-constraints.cypher`
-Cria restrições de unicidade para os identificadores principais dos nós.
+Cria restrições de unicidade para os identificadores principais dos nós, evitando duplicidade de registros.
 
 ### `02-carga-nos.cypher`
-Realiza a criação dos nós principais do grafo.
+Responsável pela criação dos nós principais do grafo:
+- usuários;
+- filmes;
+- séries;
+- gêneros;
+- atores;
+- diretores.
 
 ### `03-carga-relacionamentos.cypher`
-Cria os relacionamentos entre usuários, conteúdos, gêneros, atores e diretores.
+Cria os relacionamentos entre as entidades do projeto, incluindo:
+- conteúdos assistidos pelos usuários;
+- atores que participaram das obras;
+- diretores responsáveis pelos conteúdos;
+- classificação de filmes e séries por gênero.
 
 ### `04-consultas-negocio.cypher`
-Contém consultas que demonstram o funcionamento prático do modelo.
+Contém as consultas utilizadas para demonstrar o funcionamento do modelo na prática.
+
+---
+
+## Resultados do Projeto
+Após a carga dos dados, o grafo foi estruturado com:
+- 34 nós
+- 47 relacionamentos
+- 6 tipos de nós
+- 4 tipos principais de relacionamentos
+
+Esses resultados permitiram validar a modelagem proposta e executar consultas de negócio com sucesso no Neo4j Aura.
+
+---
 
 ## Consultas de Negócio
 Algumas perguntas que o grafo consegue responder:
@@ -111,21 +153,48 @@ Algumas perguntas que o grafo consegue responder:
 5. Executar o script `04-consultas-negocio.cypher`.
 6. Validar os resultados no Neo4j Browser.
 
+## Observação
+Embora o projeto inclua arquivos CSV no repositório, a carga final foi adaptada para execução direta em Cypher, devido às particularidades do ambiente Neo4j Aura.
+
+---
+
 ## Dificuldades Encontradas
 Durante o desenvolvimento, algumas dificuldades foram encontradas:
-- entendimento inicial da modelagem em grafos
-- definição correta dos relacionamentos entre entidades
-- ajuste do ambiente Neo4j Aura para inserção dos dados
-- cuidado com padronização dos nomes de propriedades e relacionamentos
+- compreensão inicial da lógica de modelagem em grafos;
+- definição correta dos relacionamentos entre entidades;
+- organização dos dados em arquivos CSV para documentar a estrutura;
+- adaptação da carga para scripts Cypher executados diretamente no Aura;
+
+---
 
 ## Soluções Aplicadas
-As dificuldades foram resolvidas por meio de:
-- criação prévia do modelo conceitual no Arrows.app
-- uso de constraints para evitar duplicidade
+Para superar essas dificuldades, foram adotadas as seguintes ações:
+- construção prévia do modelo conceitual do grafo;
+- uso de constraints para garantir integridade dos dados;
 - organização dos dados em arquivos CSV
 - adaptação da carga para execução direta em Cypher no Neo4j Aura
 
-## Conclusão
-Este projeto permitiu aplicar, na prática, conceitos importantes de banco de dados em grafos com Neo4j, como modelagem de entidades, criação de relacionamentos, uso de Cypher e construção de consultas de negócio.
+---
 
-Além do aspecto técnico, o desafio também reforçou a importância de documentar bem um projeto para portfólio, tornando o repositório mais claro, profissional e útil para futuras entrevistas técnicas.
+## Conclusão
+Este projeto permitiu aplicar, de forma prática, conceitos fundamentais de banco de dados em grafos com Neo4j, incluindo:
+- modelagem de entidades e relacionamentos;
+- criação de constraints;
+- manipulação de dados com Cypher;
+- construção de consultas de negócio;
+- documentação técnica voltada para portfólio.
+
+Além do aprendizado técnico, o desafio reforçou a importância de estruturar um repositório de forma clara, organizada e profissional, tornando o projeto mais relevante para estudos futuros e entrevistas técnicas.
+
+---
+
+## Tecnologias Utilizadas
+- Neo4j Aura
+- Cypher
+- Arrows.app
+- GitHub
+
+---
+
+## Autor
+Projeto desenvolvido por **Fiama Ribeiro** como parte do desafio prático da DIO sobre modelagem de banco de dados em grafos com Neo4j.
